@@ -45,6 +45,7 @@ public class SkusActivity extends AppCompatActivity {
     private InventoryCallback mInventoryCallback;
 
     private static List<String> getInAppSkus() {
+        // TODO: use your own list of SKU IDs
         final List<String> skus = new ArrayList<>();
         skus.addAll(Arrays.asList("coffee", "beer", "cake", "hamburger"));
         for (int i = 0; i < 20; i++) {
@@ -86,6 +87,22 @@ public class SkusActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mCheckout.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        
+        // TODO: Do whatever you want once the the purchase flow is complete
+        switch (resultCode){
+            /** Standard activity result: operation canceled. */
+            case RESULT_CANCELED: 
+                // TODO: Use a more relevant message
+                Toast.makeText(this, "Purchase cancelled", Toast.LENGTH_LONG).show();
+                break;
+            /** Standard activity result: operation succeeded. */
+            case RESULT_OK: 
+                // TODO: Use a more relevant message
+                Toast.makeText(this, "Purchase successful", Toast.LENGTH_LONG).show();
+                break;
+            /** Start of user-defined activity results. */
+            case RESULT_FIRST_USER: break;
+        }        
     }
 
     @Override
@@ -111,6 +128,25 @@ public class SkusActivity extends AppCompatActivity {
 
             @Override
             public void onError(int response, @Nonnull Exception e) {
+                if(BuildConfig.BUILD_TYPE == BuildConfig.DEBUG) 
+                    Log.e("SKUActivity ", "Couldn't complete the purchase", e);
+                // TODO Handle the errors the way you like
+                switch(response){
+                    case ITEM_ALREADY_OWNED: break;
+                    case USER_CANCELED: break;
+                    case WRONG_SIGNATURE: break;
+                    case SERVICE_NOT_CONNECTED: break;
+                    case OK: break;
+                    case NULL_INTENT: break;
+                    case ITEM_UNAVAILABLE: break;
+                    case EXCEPTION: break;
+                    case ITEM_NOT_OWNED: break;
+                    case ERROR: break;
+                    case DEVELOPER_ERROR: break;
+                    case BILLING_UNAVAILABLE: break;
+                    case ACCOUNT_ERROR: break;
+                    default: throw new RuntimeException("unhandled response code received");
+                }
                 reloadInventory();
             }
         };
